@@ -39,7 +39,7 @@ export interface CompressOptions {
   allowAnimated?: boolean
   /** Run in a Web Worker when possible. Default `true`. */
   worker?: boolean
-  /** Extra decoders tried before giving up, e.g. `heicDecoder()` from `picpress/heic`. */
+  /** Extra decoders tried before giving up, e.g. `heicDecoder()` from `slimpic/heic`. */
   decoders?: Decoder[]
   /** Max resize rounds when chasing `maxSize`. Default `8`. */
   maxIterations?: number
@@ -68,12 +68,12 @@ export interface CompressResult {
   offThread: boolean
 }
 
-export type PicpressErrorCode = 'DECODE_FAILED' | 'ENCODE_FAILED' | 'ABORTED' | 'INVALID_INPUT'
+export type SlimpicErrorCode = 'DECODE_FAILED' | 'ENCODE_FAILED' | 'ABORTED' | 'INVALID_INPUT'
 
-export class PicpressError extends Error {
-  constructor(public readonly code: PicpressErrorCode, message: string) {
+export class SlimpicError extends Error {
+  constructor(public readonly code: SlimpicErrorCode, message: string) {
     super(message)
-    this.name = 'PicpressError'
+    this.name = 'SlimpicError'
   }
 }
 
@@ -101,7 +101,7 @@ function killWorker(reason?: Error) {
   worker = null
   workerOk = null
   workerUrl = ''
-  for (const p of pending.values()) p.reject(reason ?? new PicpressError('ABORTED', 'worker terminated'))
+  for (const p of pending.values()) p.reject(reason ?? new SlimpicError('ABORTED', 'worker terminated'))
   pending.clear()
 }
 
@@ -163,8 +163,8 @@ function runInWorker(blob: Blob, options: PipelineOptions, onProgress?: (p: numb
 export async function compress(input: Blob, options: CompressOptions = {}): Promise<CompressResult> {
   const started = performance.now()
   const { signal, onProgress } = options
-  if (!(input instanceof Blob)) throw new PicpressError('INVALID_INPUT', 'compress() expects a File or Blob')
-  const abortError = () => new PicpressError('ABORTED', 'compression aborted')
+  if (!(input instanceof Blob)) throw new SlimpicError('INVALID_INPUT', 'compress() expects a File or Blob')
+  const abortError = () => new SlimpicError('ABORTED', 'compression aborted')
   if (signal?.aborted) throw abortError()
 
   const name = input instanceof File ? input.name : 'image'
@@ -235,10 +235,10 @@ export async function compress(input: Blob, options: CompressOptions = {}): Prom
     if (signal?.aborted) throw abortError()
     const msg = err instanceof Error ? err.message : String(err)
     if (/DECODE|decode|InvalidState|source image/i.test(msg)) {
-      const hint = sniffed === 'image/heic' ? ' (HEIC: add `decoders: [heicDecoder()]` from "picpress/heic")' : ''
-      throw new PicpressError('DECODE_FAILED', `could not decode ${sniffed ?? input.type ?? 'input'}${hint}`)
+      const hint = sniffed === 'image/heic' ? ' (HEIC: add `decoders: [heicDecoder()]` from "slimpic/heic")' : ''
+      throw new SlimpicError('DECODE_FAILED', `could not decode ${sniffed ?? input.type ?? 'input'}${hint}`)
     }
-    throw new PicpressError('ENCODE_FAILED', msg)
+    throw new SlimpicError('ENCODE_FAILED', msg)
   } finally {
     signal?.removeEventListener('abort', onAbort)
   }
@@ -272,9 +272,9 @@ export async function compress(input: Blob, options: CompressOptions = {}): Prom
 }
 
 /** Compress several files with bounded concurrency; results keep the input order. */
-export async function compressAll(files: Iterable<Blob>, options: CompressOptions & { concurrency?: number } = {}): Promise<Array<CompressResult | PicpressError>> {
+export async function compressAll(files: Iterable<Blob>, options: CompressOptions & { concurrency?: number } = {}): Promise<Array<CompressResult | SlimpicError>> {
   const list = [...files]
-  const out: Array<CompressResult | PicpressError> = new Array(list.length)
+  const out: Array<CompressResult | SlimpicError> = new Array(list.length)
   let i = 0
   const run = async () => {
     while (i < list.length) {
@@ -282,7 +282,7 @@ export async function compressAll(files: Iterable<Blob>, options: CompressOption
       try {
         out[n] = await compress(list[n], options)
       } catch (e) {
-        out[n] = e instanceof PicpressError ? e : new PicpressError('ENCODE_FAILED', String(e))
+        out[n] = e instanceof SlimpicError ? e : new SlimpicError('ENCODE_FAILED', String(e))
       }
     }
   }

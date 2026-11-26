@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { compress, PicpressError, type CompressOptions, type CompressResult } from '../core/compress'
+import { compress, SlimpicError, type CompressOptions, type CompressResult } from '../core/compress'
 
 export * from '../core/index'
 
@@ -9,7 +9,7 @@ export interface CompressItem {
   status: 'pending' | 'done' | 'error'
   progress: number
   result?: CompressResult
-  error?: PicpressError
+  error?: SlimpicError
   /** Object URL of the compressed file (revoked automatically on reset/unmount). */
   previewUrl?: string
 }
@@ -47,7 +47,7 @@ export function useCompress(options: CompressOptions = {}) {
         done.push(result)
       } catch (e) {
         if (signal.aborted) break
-        patch(item.id, { status: 'error', error: e instanceof PicpressError ? e : new PicpressError('ENCODE_FAILED', String(e)) })
+        patch(item.id, { status: 'error', error: e instanceof SlimpicError ? e : new SlimpicError('ENCODE_FAILED', String(e)) })
       }
     }
     return done

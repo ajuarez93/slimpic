@@ -2,7 +2,7 @@
  * Drop-in replacement for `browser-image-compression`:
  *
  *   - import imageCompression from 'browser-image-compression'
- *   + import imageCompression from 'picpress/compat'
+ *   + import imageCompression from 'slimpic/compat'
  *
  * Same options and return value (a File). Differences: never loads anything from a CDN
  * (`libURL` is ignored), keeps animated GIFs intact, errors are real `Error`s.
@@ -55,7 +55,7 @@ imageCompression.getFilefromDataUrl = async (dataUrl: string, filename: string, 
   return new File([blob], filename, { type: blob.type, lastModified })
 }
 
-imageCompression.version = 'picpress-compat'
+imageCompression.version = 'slimpic-compat'
 
 export default imageCompression
 export { imageCompression }

@@ -12,11 +12,11 @@
     "noEmit": true,
     "types": ["node"],
     "paths": {
-      "picpress": ["./src/core/index.ts"],
-      "picpress/react": ["./src/react/index.ts"],
-      "picpress/vue": ["./src/vue/index.ts"],
-      "picpress/compat": ["./src/compat.ts"],
-      "picpress/heic": ["./src/heic.ts"]
+      "slimpic": ["./src/core/index.ts"],
+      "slimpic/react": ["./src/react/index.ts"],
+      "slimpic/vue": ["./src/vue/index.ts"],
+      "slimpic/compat": ["./src/compat.ts"],
+      "slimpic/heic": ["./src/heic.ts"]
     }
   },
   "include": ["src", "test", "demo/src"],

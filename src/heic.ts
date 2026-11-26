@@ -4,7 +4,7 @@ import type { Decoder } from './core/compress'
  * HEIC/HEIF decoder for browsers that cannot open iPhone photos (everything but Safari).
  * Uses the optional peer dependency `heic-to` (libheif in WebAssembly, loaded on demand).
  *
- *   import { heicDecoder } from 'picpress/heic'
+ *   import { heicDecoder } from 'slimpic/heic'
  *   compress(file, { decoders: [heicDecoder()] })
  */
 export function heicDecoder(options: { quality?: number } = {}): Decoder {
@@ -23,7 +23,7 @@ export function heicDecoder(options: { quality?: number } = {}): Decoder {
     try {
       mod = (await import('heic-to')) as typeof mod
     } catch {
-      throw new Error('picpress/heic needs the optional dependency "heic-to" (npm install heic-to)')
+      throw new Error('slimpic/heic needs the optional dependency "heic-to" (npm install heic-to)')
     }
     return mod.heicTo({ blob: file, type: 'image/png', quality: options.quality })
   }

@@ -1,5 +1,5 @@
 {
-  "name": "picpress",
+  "name": "slimpic",
   "version": "0.1.0",
   "description": "Compress, resize and convert images in the browser before upload: Web Worker, WebP/AVIF, exact target size, EXIF orientation, iOS-safe, HEIC plug-in. Drop-in replacement for browser-image-compression. React and Vue hooks.",
   "keywords": [
@@ -19,12 +19,12 @@
   ],
   "license": "MIT",
   "author": "Jose Alfonso Guerrero Juarez <ajuarez93> (https://www.ajuarez93.com)",
-  "homepage": "https://github.com/ajuarez93/picpress#readme",
+  "homepage": "https://github.com/ajuarez93/slimpic#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ajuarez93/picpress.git"
+    "url": "git+https://github.com/ajuarez93/slimpic.git"
   },
-  "bugs": "https://github.com/ajuarez93/picpress/issues",
+  "bugs": "https://github.com/ajuarez93/slimpic/issues",
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.cjs",

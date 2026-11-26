@@ -8,11 +8,11 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      'picpress/react': resolve(__dirname, '../src/react/index.ts'),
-      'picpress/vue': resolve(__dirname, '../src/vue/index.ts'),
-      'picpress/compat': resolve(__dirname, '../src/compat.ts'),
-      'picpress/heic': resolve(__dirname, '../src/heic.ts'),
-      picpress: resolve(__dirname, '../src/core/index.ts'),
+      'slimpic/react': resolve(__dirname, '../src/react/index.ts'),
+      'slimpic/vue': resolve(__dirname, '../src/vue/index.ts'),
+      'slimpic/compat': resolve(__dirname, '../src/compat.ts'),
+      'slimpic/heic': resolve(__dirname, '../src/heic.ts'),
+      slimpic: resolve(__dirname, '../src/core/index.ts'),
     },
   },
   build: {

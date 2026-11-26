@@ -1,18 +1,18 @@
-# picpress
+# slimpic
 
 Compress, resize and convert images **in the browser, before upload**. Runs in a Web Worker, hits an
 exact file size, handles phone photos (EXIF rotation, HEIC, iOS canvas limits), keeps animated GIFs
 intact, and never makes a file bigger. A drop-in replacement for `browser-image-compression`.
 
-[![npm](https://img.shields.io/npm/v/picpress.svg)](https://www.npmjs.com/package/picpress)
-[![license](https://img.shields.io/npm/l/picpress.svg)](./LICENSE)
+[![npm](https://img.shields.io/npm/v/slimpic.svg)](https://www.npmjs.com/package/slimpic)
+[![license](https://img.shields.io/npm/l/slimpic.svg)](./LICENSE)
 
-**[Live demo →](https://ajuarez93.github.io/picpress/)** — drop your own photos and compare side by side with browser-image-compression. Nothing is uploaded.
+**[Live demo →](https://ajuarez93.github.io/slimpic/)** — drop your own photos and compare side by side with browser-image-compression. Nothing is uploaded.
 
-![picpress demo: four files compressed in the browser, compared with browser-image-compression](https://raw.githubusercontent.com/ajuarez93/picpress/main/.github/assets/demo.jpg)
+![slimpic demo: four files compressed in the browser, compared with browser-image-compression](https://raw.githubusercontent.com/ajuarez93/slimpic/main/.github/assets/demo.jpg)
 
 ```js
-import { compress } from 'picpress'
+import { compress } from 'slimpic'
 
 const { file, size, width, height } = await compress(input.files[0], {
   maxSize: 500_000,      // bytes: lowers quality first, then dimensions
@@ -25,9 +25,9 @@ const { file, size, width, height } = await compress(input.files[0], {
 ## Why
 
 `browser-image-compression` gets ~2.3 M downloads a week but has had no release since March 2023.
-picpress was written against its most-discussed open issues:
+slimpic was written against its most-discussed open issues:
 
-| browser-image-compression issue | picpress |
+| browser-image-compression issue | slimpic |
 |---|---|
 | #24 animated GIFs lose their animation | animated GIF / APNG / WebP are returned untouched (`skipped: 'animated'`) |
 | #222, #205, #163 black images on iPad/iPhone with big photos | canvas area capped at iOS Safari's 16.7 MP limit |
@@ -37,26 +37,26 @@ picpress was written against its most-discussed open issues:
 | #154 only lower quality | `keepResolution: true` |
 | #225, #188 request to `cdn.jsdelivr.net` | the worker is bundled inline: zero network requests |
 | #241 `fileType` silently ignored | unsupported encoders fall back (AVIF → WebP → JPEG) and set `typeFallback: true` |
-| #79 HEIC | `picpress/heic` plug-in (lazy-loads libheif only when needed) |
+| #79 HEIC | `slimpic/heic` plug-in (lazy-loads libheif only when needed) |
 | #191 canvas memory leak | every canvas is shrunk to 0×0 and every bitmap closed |
-| #211 a `ProgressEvent` is thrown instead of an error | always a `PicpressError` with a `code` |
+| #211 a `ProgressEvent` is thrown instead of an error | always a `SlimpicError` with a `code` |
 
-Measured in Chrome on the [demo](https://ajuarez93.github.io/picpress/) with synthetic noisy images
+Measured in Chrome on the [demo](https://ajuarez93.github.io/slimpic/) with synthetic noisy images
 (your numbers will vary with content and hardware):
 
-| Same input and options | browser-image-compression 2.0.2 | picpress |
+| Same input and options | browser-image-compression 2.0.2 | slimpic |
 |---|---|---|
 | 24 MP JPEG → WebP ≤ 300 KB | 18.3 s | 3.4 s |
 | 20 MP PNG (50 MB) → WebP ≤ 1 MB | 10.7 s | 5.0 s |
 | 24 MP JPEG → JPEG ≤ 500 KB, max side 2048 | shrank to 1231×1847 | kept 1365×2048 |
 | PNG with alpha → JPEG ≤ 100 KB | shrank to 1371×1028 | kept 1600×1200 |
 | animated GIF → WebP | first frame only | kept animated |
-| HEIC in Chrome | throws `[object Event]` | works with `picpress/heic` |
+| HEIC in Chrome | throws `[object Event]` | works with `slimpic/heic` |
 
 ## Install
 
 ```bash
-npm install picpress
+npm install slimpic
 npm install heic-to   # optional, only for HEIC outside Safari
 ```
 
@@ -64,7 +64,7 @@ npm install heic-to   # optional, only for HEIC outside Safari
 
 ```diff
 - import imageCompression from 'browser-image-compression'
-+ import imageCompression from 'picpress/compat'
++ import imageCompression from 'slimpic/compat'
 ```
 
 Same options, same `File` result. `libURL` is ignored (nothing is loaded from a CDN).
@@ -89,14 +89,14 @@ Same options, same `File` result. `libURL` is ignored (nothing is loaded from a 
 | `signal`, `onProgress` | — | `AbortSignal`, `0–100` callback |
 
 Result: `{ file, size, originalSize, width, height, type, quality, targetMet, skipped?, typeFallback, durationMs, offThread }`.
-Errors: `PicpressError` with `code`: `DECODE_FAILED`, `ENCODE_FAILED`, `ABORTED`, `INVALID_INPUT`.
+Errors: `SlimpicError` with `code`: `DECODE_FAILED`, `ENCODE_FAILED`, `ABORTED`, `INVALID_INPUT`.
 
 `compressAll(files, { concurrency: 2, ...options })` handles several files and keeps their order.
 
 ## React
 
 ```jsx
-import { useCompress, formatBytes } from 'picpress/react'
+import { useCompress, formatBytes } from 'slimpic/react'
 
 function Upload() {
   const { items, add, files, pending } = useCompress({ maxSize: 500_000, type: 'image/webp' })
@@ -117,7 +117,7 @@ function Upload() {
 
 ```vue
 <script setup>
-import { useCompress } from 'picpress/vue'
+import { useCompress } from 'slimpic/vue'
 const { items, add, files } = useCompress({ maxSize: 500_000, type: 'image/webp' })
 </script>
 
@@ -129,8 +129,8 @@ const { items, add, files } = useCompress({ maxSize: 500_000, type: 'image/webp'
 ## HEIC (iPhone photos)
 
 ```js
-import { compress } from 'picpress'
-import { heicDecoder } from 'picpress/heic'
+import { compress } from 'slimpic'
+import { heicDecoder } from 'slimpic/heic'
 
 await compress(file, { decoders: [heicDecoder()] })
 ```
@@ -140,7 +140,7 @@ Safari decodes HEIC natively, so the WebAssembly decoder (`heic-to`) is only dow
 ## Browser support
 
 Any browser with `createImageBitmap` and canvas `toBlob`. The Worker path needs 2D `OffscreenCanvas`
-(Chrome 69+, Firefox 105+, Safari 16.4+); elsewhere picpress runs on the main thread automatically.
+(Chrome 69+, Firefox 105+, Safari 16.4+); elsewhere slimpic runs on the main thread automatically.
 AVIF output depends on the browser's encoder; when it is missing you get WebP and `typeFallback: true`.
 
 ## Development

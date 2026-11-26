@@ -1,8 +1,8 @@
 import './demo.css'
 import { useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { formatBytes, useCompress, type CompressOptions, type OutputType } from 'picpress/react'
-import { heicDecoder } from 'picpress/heic'
+import { formatBytes, useCompress, type CompressOptions, type OutputType } from 'slimpic/react'
+import { heicDecoder } from 'slimpic/heic'
 import legacy from 'browser-image-compression'
 
 const SAMPLE = './samples/sintel.jpg'
@@ -53,7 +53,7 @@ function App() {
   return (
     <>
       <header>
-        <h1>picpress</h1>
+        <h1>slimpic</h1>
         <p>Compress, resize and convert images in the browser before upload — in a Web Worker, to an exact size, iOS-safe.</p>
       </header>
 
@@ -93,7 +93,7 @@ function App() {
         <div className="tablewrap">
           <table>
             <thead>
-              <tr><th></th><th>File</th><th>Original</th><th>picpress</th><th>Saved</th><th>Size</th><th>Type</th><th>Time</th>{compare && <th>browser-image-compression</th>}</tr>
+              <tr><th></th><th>File</th><th>Original</th><th>slimpic</th><th>Saved</th><th>Size</th><th>Type</th><th>Time</th>{compare && <th>browser-image-compression</th>}</tr>
             </thead>
             <tbody>
               {items.map((it) => {

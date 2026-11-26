@@ -1,5 +1,5 @@
 import { computed, onBeforeUnmount, ref, unref, type MaybeRef } from 'vue'
-import { compress, PicpressError, type CompressOptions, type CompressResult } from '../core/compress'
+import { compress, SlimpicError, type CompressOptions, type CompressResult } from '../core/compress'
 
 export * from '../core/index'
 
@@ -9,7 +9,7 @@ export interface CompressItem {
   status: 'pending' | 'done' | 'error'
   progress: number
   result?: CompressResult
-  error?: PicpressError
+  error?: SlimpicError
   previewUrl?: string
 }
 
@@ -47,7 +47,7 @@ export function useCompress(options: MaybeRef<CompressOptions> = {}) {
         done.push(result)
       } catch (e) {
         if (signal.aborted) break
-        patch(item.id, { status: 'error', error: e instanceof PicpressError ? e : new PicpressError('ENCODE_FAILED', String(e)) })
+        patch(item.id, { status: 'error', error: e instanceof SlimpicError ? e : new SlimpicError('ENCODE_FAILED', String(e)) })
       }
     }
     return done

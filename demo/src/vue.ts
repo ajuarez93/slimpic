@@ -1,6 +1,6 @@
 import './demo.css'
 import { createApp, h } from 'vue'
-import { formatBytes, useCompress } from 'picpress/vue'
+import { formatBytes, useCompress } from 'slimpic/vue'
 
 // In an app (SFC):
 //   const { items, add } = useCompress({ maxSize: 300_000, type: 'image/webp' })
@@ -9,7 +9,7 @@ createApp({
   setup() {
     const { items, add, reset } = useCompress({ maxSize: 300 * 1024, maxWidth: 2048, maxHeight: 2048, type: 'image/webp' })
     return () => [
-      h('header', [h('h1', 'picpress'), h('p', ['Vue 3 — ', h('code', 'useCompress()'), ', max 300 KB, WebP.'])]),
+      h('header', [h('h1', 'slimpic'), h('p', ['Vue 3 — ', h('code', 'useCompress()'), ', max 300 KB, WebP.'])]),
       h('label', { class: 'drop' }, [
         h('span', ['Choose photos: ', h('input', { type: 'file', multiple: true, accept: 'image/*', onChange: (e: Event) => add((e.target as HTMLInputElement).files) })]),
       ]),
